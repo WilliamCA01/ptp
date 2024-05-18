@@ -25,40 +25,25 @@ def mtsp_dp(G):
     number = len(nodes)
 
     # memo = [[-1]*(1 << (number+1)) for _ in range(number+1)]
-
+    # print(memo)
+    
     result = math.inf
     # print(G.edges)
 
     for i in range(number):
-        print(f"[DEBUG] i: {i}")
-        second_result = dp_MTSP(i, (1 << (number+1))-1, number, G) + G.edges[i,0]['weight']
-        print(f"[DEBUG] result: {second_result}")
+        # print(f"[DEBUG] i: {i}")
+        # second_result = dp_MTSP(i, (1 << (number))-1, number, G, [i]) 
+        # second_result[0] += G.edges[i,0]['weight']
+        # second_result[1].append(0)
+        # # print(f"[DEBUG] result: {second_result}")
+
+        # if result[0] > second_result[0]:
+        #     result = second_result
+        # result = min(result, second_result)
+        second_result = dp_MTSP(i, (1 << (number))-1, number, G) + G.edges[i,0]['weight']
         result = min(result, second_result)
     
     print("Answer:", result)
-    # memo = [[-1] * (max(nodes)) for _ in range(G.number_of_nodes())]
-    # nodes.remove(0)
-    # print(f"[DEBUG] nodes: {nodes}\n")
-
-    # n = max(nodes)
-    # memo = [[-1]*(1 << (n+1)) for _ in range(n+1)]
-    # result = [math.inf, [0]]
-
-    # second_result = 10**9
-
-    # for i in range(1, n+1):
-
-    #     if i in nodes:
-    #         second_result = min(second_result, dp_MTSP(i, (1 << (n+1))-1, G, memo, n) + G.edges[i, 0]['weight'])
-
-    #         # second_result += G.edges[i, 0]['weight']
-
-    #         # if second_result < result:
-    #             # result = second_result
-
-
-    # print(second_result)
-    # tour = second_result
 
 
     tour = result
@@ -67,9 +52,15 @@ def mtsp_dp(G):
 def dp_MTSP(source, mask, number, G):
 
     if mask == ((1 << source) | 3):
-        return G.edges[0][source]
+        # print("Hello")
+        # return [G.edges[0, source]['weight'], tour]
+        return G.edges[0, source]['weight']
     
     if memo[source][mask] != -1:
+        # print(source)
+        # print(mask)
+        # print("test")
+        # return [memo[source][mask], tour]
         return memo[source][mask]
     
     result = math.inf
@@ -78,29 +69,20 @@ def dp_MTSP(source, mask, number, G):
         if (mask & (1 << j)) != 0 and j != source and j != 0:
             # print(f"[DEBUG] j: {j}")
             # print(f"[DEBUG] source: {source}")
+            # print("[DEBUG] weight:", G.edges[j, source]['weight'])
+            # print("[DEBUG]:", mask & (~(1 << source)))
+            # second_result = dp_MTSP(j, mask & (~(1 << source)), number, G, tour)
+            # second_result[0] += G.edges[j, source]['weight']
+            # second_result[1].append(source)
+
+            # print(result[0])
+            # if result[0] > second_result[0]:
+            #     result = second_result
             result = min(result, dp_MTSP(j, mask & (~(1 << source)), number, G) + G.edges[j, source]['weight'])
 
+    # print("[DEBUG] result:", result)
+    # memo[source][mask] = result[0]
     memo[source][mask] = result
-    return result
-
-    # if nodes == ((1 << source) | 3):
-    #     return G.edges[0, source]['weight']
-    
-    # if memo[source][nodes] != -1:
-    #     return memo[source][nodes]
-    
-    # result = 10**9
-
-    # for i in range(1, n+1):
-    #     if i in list(G.nodes):
-    #         if (nodes & (1 << i)) != 0 and source != i and i != 0:
-    #             # print(f"[DEBUG] i: {i}, source: {source}\n")
-    #             # print(f"[DEBUG] edges: {}\n")
-    #             result = min(result, dp_MTSP(i, nodes & (~(1 << source)), G, memo, n) + G.edges[i, source]['weight'])
-    # memo[source][nodes] = result
-
-
-
     return result
 
 # def dp_MTSP(source, nodes, G, tour, memo):
